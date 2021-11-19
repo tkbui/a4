@@ -1,0 +1,477 @@
+T.K. Bui | CS 185C | Assignment 4, due 11/18/2021
+======================================================================================================================
+Script started on 2021-11-19 08:06:08+00:00 [TERM="screen" TTY="/dev/pts/1" COLUMNS="189" LINES="51"]
+
+----------------------------------------------------------------------------------------------------------------------
+1) Pick the 100 customer reviews with the highest helpfulness scores. Save them under directory REVIEWS in files
+   named as REVIEWS/reviewID.txt.
+
+bui@f6linuxA7:~$ mkdir REVIEWS
+
+bui@f6linuxA7:~$ head -n 1000 amazon_reviews_us_Books_v1_02.tsv > 1000reviews.txt
+
+bui@f6linuxA7:~$ sort -n -r -t $'\t' -k 9 1000reviews.txt | head -n 100 > top100reviews.txt
+
+bui@f6linuxA7:~$ for i in {1..100}; do awk "NR==$i" top100reviews.txt | awk -F $'\t' '{print $14 > "REVIEWS/"$3".txt"}'; done
+
+bui@f6linuxA7:~$ cd REVIEWS/
+
+bui@f6linuxA7:~/REVIEWS$ ls | wc -l
+100
+
+bui@f6linuxA7:~/REVIEWS$ ls
+R12EHXBC0GP2C2.txt  R22G14MRW8D4JT.txt  R327Y8FVALBGWW.txt  R3THZWOBS1086J.txt
+R14F73WG25M4RC.txt  R23JMJ74IKZ6J9.txt  R33E8WCTE4BQHY.txt  R3VK6TOXURV3Q2.txt
+R15D0OS2OA83H1.txt  R282WW4ZDH3B5V.txt  R33JIA4B863YJH.txt  R3W3O968BWU7JG.txt
+R160DHJPJ4B20R.txt  R299KYRKCKSUR5.txt  R33O2810BC4UR0.txt  R3Y4Y8Y9D0VDN.txt
+R16OSGJQ7I7QN8.txt  R2CRRS0T4PUYN8.txt  R34X92SSRBI0N4.txt  R5F0SREGDRXJ2.txt
+R196XZ2EZVH48K.txt  R2D0FHU29U7BAX.txt  R38RXR8USISV94.txt  R6NFCABUEFXBS.txt
+R1AA0JXK1U70RO.txt  R2DXLNKF0EL4CI.txt  R38T0M1TCTITDI.txt  R8IK28XKE11J2.txt
+R1E1MS2H672ZCK.txt  R2E2KP6K6OUBEX.txt  R39RSXXM7RRJ76.txt  RATYYOFKRQ6KG.txt
+R1GIM3XY2S5XKZ.txt  R2FDLOLE8ULAUW.txt  R3AW5JRZYH66M5.txt  RCAZ1P9DNA9NW.txt
+R1GSSIPURVQ82M.txt  R2FKDWNCIXPY5L.txt  R3BTWN817OKMOJ.txt  RCHF5TT2YX0S2.txt
+R1LG0O66HWUI2Q.txt  R2G7QDVS4X8ZMU.txt  R3CR6VVUR450F0.txt  RFQGXN0OJ52H7.txt
+R1LVRBD4ZZQ1UL.txt  R2JEXK5IEOJV9E.txt  R3CX1WT0P5ZJIJ.txt  RGX7NA33824BR.txt
+R1M60NYB4UPRJ8.txt  R2JSWNTAO83X3V.txt  R3F583X11I1RP6.txt  RI1SA17A89DE.txt
+R1M6OU2B3FR7E6.txt  R2KDYUXL4SWWCZ.txt  R3H4WDLIBB2UCH.txt  RM0CSYVWKHW5W.txt
+R1NHS4SDMPYF7T.txt  R2KSA5X3HOO15L.txt  R3HBY2C366LBGQ.txt  RMGFMK0DT661U.txt
+R1OPUF771LL5O5.txt  R2LEQ0HTZ9909Q.txt  R3HEM8IBEXQ4WE.txt  RNSB10A8SS8NJ.txt
+R1OVM6HX7FTQD0.txt  R2N94GR63ML7G0.txt  R3IPH0VNN8406T.txt  RO83XT32BMOO6.txt
+R1RKQW3QSOZ11C.txt  R2PQ9EPQO25N5C.txt  R3JV7XK3DS4FKL.txt  RP145DP72VQNV.txt
+R1S06GK0YSO3YQ.txt  R2R1ERQ6W5ONRI.txt  R3MD5TZJGIPTDU.txt  RQ041TWOQ78I.txt
+R1S41DJNZ4GXWF.txt  R2UWXPWOOBCP2M.txt  R3MKXKE909RL76.txt  RQ9HJSFB424SW.txt
+R1TK5Q90GGJSTN.txt  R2W9ISG79IU9IK.txt  R3NV6VKBFPBE5R.txt  RST0WIFGD80U2.txt
+R1TMN2NF6QLO9P.txt  R2YKAYUQP2L6H5.txt  R3ORKEXHWTMOIC.txt  RW26U57JFM39W.txt
+R1U4MUMCNHRIFO.txt  R2ZTKMOYLMW8N4.txt  R3Q5KQOAPTIE78.txt  RWFAYY59NPK0Q.txt
+R1Y2EJNBUDQ0BU.txt  R2ZWUHBLJGPTX9.txt  R3RJUVR1004699.txt  RX6OWUF8EFZ72.txt
+R202MMP0AWPMNY.txt  R31MMNEA2UPG3W.txt  R3TG0TPV7LVQW4.txt  RXFLVGTDEZNAA.txt
+
+EXPLANATION: I got the first 1000 reviews from the Amazon file, sorted those in reverse order by helpfulness,
+then took the first 100 to get the 100 reviews. I put the review bodies under the name of the respective review id.
+
+----------------------------------------------------------------------------------------------------------------------
+2) Do lemmatization of all words in the review body of your 100 customer reviews: remove the endings "ing", "ed", "s"
+   to keep the parts of words you can actually compare.
+
+bui@f6linuxA7:~/REVIEWS$ cat R12EHXBC0GP2C2.txt
+Dobson begins her easy-to-read book with chapters appropriately titled \\"Helping Your Child Love Learning\\" and \\"Creating Your Own Educational Reform\\". After reading just these two chapters I was already in love with the book.<br /><br />The remaining chapters consist of reader contributed ideas, lessons and games. These parents know how to make education so fun the kids probably won't even know they are learning! The ideas are easy, fast, inexpensive, and usually involve minimal research.<br /><br />What really makes this book stand far and above others is Table 2.2, found on pages 34-37. This helpful table lists many popular off-the-shelf curriculums that can be easily recreated at home with materials you already have, or can be found used - all for under $100!<br /><br />This book is truly ingenious! It's about time someone organized the ideas of creative parents into one handy reference. I cannot think of a better person to present this material other a personal favorite, Linda Dobson.
+
+bui@f6linuxA7:~/REVIEWS$ cd ..
+
+bui@f6linuxA7:~$ nano
+
+bui@f6linuxA7:~$ chmod +x lemmatization.sh
+
+-----
+SCRIPT: lemmatization.sh
+#!/bin/bash
+sed -i 's/ing[.,?;:!]* / /g' $1
+sed -i 's/ed[.,?;:!]* /e /g' $1
+sed -i 's/s[.,?;:!]* / /g' $1
+-----
+
+bui@f6linuxA7:~$ cd REVIEWS/
+
+bui@f6linuxA7:~/REVIEWS$ for i in `ls *.txt`; do ../lemmatization.sh $i ; done
+
+bui@f6linuxA7:~/REVIEWS$ cat R12EHXBC0GP2C2.txt
+Dobson begin her easy-to-read book with chapter appropriately title \\"Help Your Child Love Learning\\" and \\"Creat Your Own Educational Reform\\". After read just these two chapter I wa already in love with the book.<br /><br />The remain chapter consist of reader contribute idea lesson and game These parent know how to make education so fun the kid probably won't even know they are learn The idea are easy, fast, inexpensive, and usually involve minimal research.<br /><br />What really make thi book stand far and above other i Table 2.2, found on page 34-37. Thi helpful table list many popular off-the-shelf curriculum that can be easily recreate at home with material you already have, or can be found use - all for under $100!<br /><br />Thi book i truly ingeniou It' about time someone organize the idea of creative parent into one handy reference. I cannot think of a better person to present thi material other a personal favorite, Linda Dobson.
+
+EXPLANATION: I put 3 sed commands in a script file to do the lemmatization on the files, then used a for
+loop to use the script on all review files.
+
+----------------------------------------------------------------------------------------------------------------------
+3) Then you should do the same removal of stop words, words with one or two characters, and punctuation symbols
+   (commas, dots, colons, etc) as you did in the last assignment #3.
+
+bui@f6linuxA7:~/REVIEWS$ cd ..
+
+bui@f6linuxA7:~$ nano
+
+bui@f6linuxA7:~$ chmod +x sed_replacements.sh
+
+-----
+SCRIPT: sed_replacements.sh
+#!/bin/bash
+sed -i 's/ and / /g' $1
+sed -i 's/ the / /g' $1
+sed -i 's/ not / /g' $1
+sed -i 's/ but / /g' $1
+sed -i 's/ have / /g' $1
+sed -i 's/ just / /g' $1
+sed -i 's/ my / /g' $1
+sed -i 's/ its / /g' $1
+sed -i 's/ or / /g' $1
+sed -i 's/ if / /g' $1
+sed -i 's/ in / /g' $1
+sed -i 's/ it / /g' $1
+sed -i 's/ who / /g' $1
+sed -i 's/ what / /g' $1
+sed -i 's/ why / /g' $1
+sed -i 's/ how / /g' $1
+sed -i 's/ when / /g' $1
+sed -i 's/ you / /g' $1
+sed -i 's/ are / /g' $1
+sed -i 's/ where / /g' $1
+sed -i 's/ can / /g' $1
+sed -i 's/ could / /g' $1
+sed -i 's/ do / /g' $1
+sed -i 's/ did / /g' $1
+sed -i 's/ while / /g' $1
+sed -i 's/ his / /g' $1
+sed -i 's/ her / /g' $1
+sed -i 's/ with / /g' $1
+sed -i 's/<[a-zA-Z]* \/>//g' $1
+sed -i 's/<[a-zA-Z]*\/>//g' $1
+sed -i 's/<[a-zA-Z]* >//g' $1
+sed -i 's/<[a-zA-Z]*>//g' $1
+sed -i 's/<[a-zA-Z]*_\/>//g' $1
+sed -i 's/ [a-z] / /g' $1
+sed -i 's/ [A-Z] / /g' $1
+sed -i 's/ [A-Z][a-z] / /g' $1
+sed -i 's/ [a-z][a-z] / /g' $1
+sed -i 's/ [A-Z][A-Z] / /g' $1
+sed -i 's/[.;,:!?-]/ /g' $1
+sed -i 's/ for / /g' $1
+sed -i 's/ has / /g' $1
+sed -i 's/ had / /g' $1
+sed -i 's/\// /g' $1
+sed -i 's/\\/ /g' $1
+sed -i "s/['\"]/ /g" $1
+-----
+
+bui@f6linuxA7:~$ cd REVIEWS/
+
+bui@f6linuxA7:~/REVIEWS$ for i in `ls *.txt`; do ../sed_replacements.sh $i ; done
+
+bui@f6linuxA7:~/REVIEWS$ cat R12EHXBC0GP2C2.txt
+Dobson begin easy to read book chapter appropriately title    Help Your Child Love Learning       Creat Your Own Educational Reform     After read these two chapter already love the book The remain chapter consist reader contribute idea lesson game These parent know make education fun the kid probably won t even know they learn The idea easy  fast  inexpensive  usually involve minimal research What really make thi book stand far above other Table 2 2  found page 34 37  Thi helpful table list many popular off the shelf curriculum that easily recreate home material already have  found use   all under $100 Thi book truly ingeniou It  about time someone organize the idea creative parent into one handy reference  cannot think better person present thi material other personal favorite  Linda Dobson 
+
+bui@f6linuxA7:~/REVIEWS$ for i in `ls *.txt`; do ../lemmatization.sh $i ; done
+
+bui@f6linuxA7:~/REVIEWS$ cat R12EHXBC0GP2C2.txt
+Dobson begin easy to read book chapter appropriately title    Help Your Child Love Learn       Creat Your Own Educational Reform     After read these two chapter already love the book The remain chapter consist reader contribute idea lesson game These parent know make education fun the kid probably won t even know they learn The idea easy  fast  inexpensive  usually involve minimal research What really make thi book stand far above other Table 2 2  found page 34 37  Thi helpful table list many popular off the shelf curriculum that easily recreate home material already have  found use   all under $100 Thi book truly ingeniou It  about time someone organize the idea creative parent into one handy reference  cannot think better person present thi material other personal favorite  Linda Dobson 
+
+EXPLANATION: I made a script file with a bunch of sed commands for stopword and punctuation removal. I used a for
+loop to run the script for every review file, then ran the lemmatization script again to take care of any words left
+that didn't get processed in that script due to being mistakenly skipped or punctuation not yet removed.
+
+----------------------------------------------------------------------------------------------------------------------
+4) Write a shell script that takes 2 filenames as parameters: REVIEWS/reviewID.txt and the tweets file you downloaded
+   above (training*.csv), compares each tweet text (6th column) against the review_body, and appends to the end of 
+   the REVIEWS/reviewID.txt file all tweets that have at least 2 words in common with the review_body.
+
+bui@f6linuxA7:~/REVIEWS$ cd ..
+
+bui@f6linuxA7:~$ head -n 100 training.1600000.processed.noemoticon.csv > top100tweets.txt
+
+bui@f6linuxA7:~$ awk -F '","' '{print $6}' top100tweets.txt > top100tweets.column6.txt
+
+bui@f6linuxA7:~$ wc -l tweets.column6.txt 
+100 top100tweets.column6.txt
+
+bui@f6linuxA7:~$ head top100tweets.column6.txt
+@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer.  You shoulda got David Carr of Third Day to do it. ;D"
+is upset that he can't update his Facebook by texting it... and might cry as a result  School today also. Blah!"
+@Kenichan I dived many times for the ball. Managed to save 50%  The rest go out of bounds"
+my whole body feels itchy and like its on fire "
+@nationwideclass no, it's not behaving at all. i'm mad. why am i here? because I can't see you all over there. "
+@Kwesidei not the whole crew "
+Need a hug "
+@LOLTrish hey  long time no see! Yes.. Rains a bit ,only a bit  LOL , I'm fine thanks , how's you ?"
+@Tatiana_K nope they didn't have it "
+@twittera que me muera ? "
+
+bui@f6linuxA7:~$ sed -i 's/\"//g' top100tweets.column6.txt
+
+bui@f6linuxA7:~$ head top100tweets.column6.txt
+@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer.  You shoulda got David Carr of Third Day to do it. ;D
+is upset that he can't update his Facebook by texting it... and might cry as a result  School today also. Blah!
+@Kenichan I dived many times for the ball. Managed to save 50%  The rest go out of bounds
+my whole body feels itchy and like its on fire 
+@nationwideclass no, it's not behaving at all. i'm mad. why am i here? because I can't see you all over there. 
+@Kwesidei not the whole crew 
+Need a hug 
+@LOLTrish hey  long time no see! Yes.. Rains a bit ,only a bit  LOL , I'm fine thanks , how's you ?
+@Tatiana_K nope they didn't have it 
+@twittera que me muera ? 
+
+bui@f6linuxA7:~$ ls
+1000reviews.txt                    second.txt
+REVIEWS                            sed_replacements.sh
+a4.txt                             share
+amazon_reviews_us_Books_v1_02.tsv  testdata.manual.2009.06.14.csv
+assignment.txt                     top100reviews.txt
+assignments                        top100tweets.column6.txt
+bin                                top100tweets.txt
+datamash-1.3                       training.1600000.processed.noemoticon.csv
+datamash-1.3.tar.gz                trainingandtestdata.zip
+lemmatization.sh                   worksheets
+
+bui@f6linuxA7:~$ mkdir TWEETS
+
+bui@f6linuxA7:~$ for i in {1..100}; do awk "NR==$i" top100tweets.column6.txt > "TWEETS/tweet$i.txt" ; done
+
+bui@f6linuxA7:~$ cd TWEETS
+
+bui@f6linuxA7:~/TWEETS$ ls | wc -l
+100
+
+bui@f6linuxA7:~/TWEETS$ ls
+tweet1.txt    tweet22.txt  tweet36.txt  tweet5.txt   tweet63.txt  tweet77.txt  tweet90.txt
+tweet10.txt   tweet23.txt  tweet37.txt  tweet50.txt  tweet64.txt  tweet78.txt  tweet91.txt
+tweet100.txt  tweet24.txt  tweet38.txt  tweet51.txt  tweet65.txt  tweet79.txt  tweet92.txt
+tweet11.txt   tweet25.txt  tweet39.txt  tweet52.txt  tweet66.txt  tweet8.txt   tweet93.txt
+tweet12.txt   tweet26.txt  tweet4.txt   tweet53.txt  tweet67.txt  tweet80.txt  tweet94.txt
+tweet13.txt   tweet27.txt  tweet40.txt  tweet54.txt  tweet68.txt  tweet81.txt  tweet95.txt
+tweet14.txt   tweet28.txt  tweet41.txt  tweet55.txt  tweet69.txt  tweet82.txt  tweet96.txt
+tweet15.txt   tweet29.txt  tweet42.txt  tweet56.txt  tweet7.txt   tweet83.txt  tweet97.txt
+tweet16.txt   tweet3.txt   tweet43.txt  tweet57.txt  tweet70.txt  tweet84.txt  tweet98.txt
+tweet17.txt   tweet30.txt  tweet44.txt  tweet58.txt  tweet71.txt  tweet85.txt  tweet99.txt
+tweet18.txt   tweet31.txt  tweet45.txt  tweet59.txt  tweet72.txt  tweet86.txt
+tweet19.txt   tweet32.txt  tweet46.txt  tweet6.txt   tweet73.txt  tweet87.txt
+tweet2.txt    tweet33.txt  tweet47.txt  tweet60.txt  tweet74.txt  tweet88.txt
+tweet20.txt   tweet34.txt  tweet48.txt  tweet61.txt  tweet75.txt  tweet89.txt
+tweet21.txt   tweet35.txt  tweet49.txt  tweet62.txt  tweet76.txt  tweet9.txt
+
+bui@f6linuxA7:~/TWEETS$ cat tweet1.txt 
+@switchfoot http://twitpic.com/2y1zl - Awww, that's a bummer.  You shoulda got David Carr of Third Day to do it. ;D
+
+bui@f6linuxA7:~/TWEETS$ for i in `ls *.txt`; do ../lemmatization.sh $i ; done
+
+bui@f6linuxA7:~/TWEETS$ for i in `ls *.txt`; do ../sed_replacements.sh $i ; done
+
+bui@f6linuxA7:~/TWEETS$ cat tweet1.txt
+@switchfoot http   twitpic com 2y1zl   Awww  that  bummer   You shoulda got David Carr Third Day   D
+
+bui@f6linuxA7:~/TWEETS$ cd ..
+
+bui@f6linuxA7:~$ ls
+1000reviews.txt                    second.txt
+REVIEWS                            sed_replacements.sh
+TWEETS                             share
+a4.txt                             testdata.manual.2009.06.14.csv
+amazon_reviews_us_Books_v1_02.tsv  top100reviews.txt
+assignment.txt                     top100tweets.column6.txt
+assignments                        top100tweets.txt
+bin                                training.1600000.processed.noemoticon.csv
+datamash-1.3                       trainingandtestdata.zip
+datamash-1.3.tar.gz                worksheets
+lemmatization.sh
+
+bui@f6linuxA7:~$ nano
+
+bui@f6linuxA7:~$ chmod +x append_tweets.sh
+
+-----
+SCRIPT: append_tweets.sh
+#!/bin/bash
+common=`comm -12 <(tr " " "\n" < $1 | sort ) <(tr " " "\n" < $2 | sort ) | sort | uniq -c | wc -l`;
+if [ $common -gt 1 ];
+then
+  cat $2 >> $1
+  cat $2 >> ~/similar_tweets.txt
+fi
+-----
+
+EXPLANATION: In preparation for #5, I got 100 tweets to compare against from the twitter dataset. I split up each
+tweet into their own file, similar to the review files. I ran the twitter files through my previous 2 scripts, and
+then I have the script for comparing the reviews against the tweets. Here, i used the comm command so that files
+that have at least 2 words in common, then the tweet will be appended to the review. Also, I send the appended
+tweet to another file that will be used in #6.
+
+----------------------------------------------------------------------------------------------------------------------
+5) Use the parallel command we have seen to perform this operation against all 100 REVIEWS/reviewID.txt files in
+   parallel. Time your parallel execution with the time command. How long did it take?
+
+bui@f6linuxA7:~$ for i in `ls REVIEWS/*.txt`; do for j in `ls TWEETS/*.txt`; do echo "./append_tweets.sh $i $j" >> commands.txt ; done; done
+
+bui@f6linuxA7:~$ time parallel < commands.txt
+
+real	0m30.781s
+user	1m36.845s
+sys	1m1.331s
+
+bui@f6linuxA7:~$ wc -l commands.txt 
+10000 commands.txt
+
+EXPLANATION: I sent all the commands to the commands.txt file and ran the commands in parallel and timed them
+as shown in class. I show that there were 10000 commands run in about 30 seconds (100 reviews compared against
+100 tweets each, 100 * 100 = 10000).
+
+----------------------------------------------------------------------------------------------------------------------
+6) Amongst all the tweets you filtered out as similar to these 100 REVIEWS/reviewID.txt files, count the word
+   occurrences. Which 10 tweet words appear most frequently overall?
+
+bui@f6linuxA7:~$ ./lemmatization.sh similar_tweets.txt
+
+bui@f6linuxA7:~$ ./sed_replacements.sh similar_tweets.txt
+
+bui@f6linuxA7:~$ tr " " "\n" < similar_tweets.txt | sort | uniq -c | sort -nr -k 1 | head -n 15
+  36053 
+   1558 that
+    800 too
+    800 now
+    700 see
+    700 sad
+    700 like
+    700 don
+    700 day
+    696 out
+    688 one
+    601 tomorrow
+    600 think
+    598 really
+    588 time
+
+EXPLANATION: Tweets that were appended to reviews were appended to a separate file called similar_tweets.txt as well
+in my append_tweets script. Here, I used the lemmatization and sed_replacements scripts again to ensure that stopwords
+were not in the top 15. From there, I used tr to get the top 10-15 frequently used words from the tweets.
+
+----------------------------------------------------------------------------------------------------------------------
+7) Repeat the same analysis for any 100 customer reviews with low helpfulness scores of 0. Save them under directory
+   REVIEWS_UNHELPFUL in files named as REVIEWS_UNHELPFUL/reviewID.txt.
+
+bui@f6linuxA7:~$ mkdir REVIEWS_UNHELPFUL
+
+bui@f6linuxA7:~$ awk -F $'\t' '$9==0 {print $3,$14}{OFS="\t"}' 1000reviews.txt | head -n 100 > 100badreviews.txt
+
+bui@f6linuxA7:~$ for i in {1..100}; do awk "NR==$i" 100badreviews.txt | awk -F $'\t' '{print $2 > "REVIEWS_UNHELPFUL/"$1".txt"}'; done
+
+bui@f6linuxA7:~$ cd REVIEWS_UNHELPFUL/
+
+bui@f6linuxA7:~/REVIEWS_UNHELPFUL$ ls | wc -l
+100
+
+bui@f6linuxA7:~/REVIEWS_UNHELPFUL$ ls
+R121VUBD3RIDXO.txt  R1RYKSZM15B7H2.txt  R2UP6XSVYJBJ2H.txt  R8KSCC087QZBJ.txt
+R12CRPKGVM9U81.txt  R1SX06I5A0X0NG.txt  R2XU9JU32I8ECL.txt  R9D30BEROYYWC.txt
+R12CUIV8LIFCYD.txt  R1TNWRKIVHVYOV.txt  R2XV27EZ8O3MUE.txt  R9XZTUFW70FO0.txt
+R13T7B40Z4DAE6.txt  R1UB948IF27BT9.txt  R2YW5GGYNKXW36.txt  RCYSGJQVQLD3R.txt
+R14T3QS8G0EZB1.txt  R1V2BZ1JFBCJBV.txt  R313MQ46O8D7YU.txt  RDGYTVIEAW8A7.txt
+R15EYWQPKZ53QE.txt  R1VKEE2NWSWDRU.txt  R31D2FNIKV6ZQJ.txt  RE5XV6NVB17NT.txt
+R16CRLM3WHWZZ6.txt  R1VLTFQPW9SQOI.txt  R31IDAH2KTYNE5.txt  REU5EU00K286C.txt
+R17VJ32BI1ECQL.txt  R1WYOZ7Z0I83B.txt   R31J0S10NQLSO5.txt  RFRYYH4G0D958.txt
+R1AT0CFYFP98M1.txt  R1XIKKRDV0TP05.txt  R33Q4RURXNVN7M.txt  RH7UV4Q03YVQL.txt
+R1FJPQD63AKRJK.txt  R1XY5WKF3V7HGX.txt  R34D9MGZ6AU3TZ.txt  RHR8DD8567UVV.txt
+R1GEWQQ67KJC5T.txt  R1ZB49MLPJOWW1.txt  R35J90IL4H6DAH.txt  RKL3BR7D32YLB.txt
+R1GS3TLMAU03PY.txt  R229JMAAVX4SMK.txt  R36ACJURUNHD38.txt  RKPVE7HXIL19X.txt
+R1GXWLHEMO88A2.txt  R22OR4VN556YRZ.txt  R36LFQKJTWUQT2.txt  RLQKITK5IJWO1.txt
+R1HNXOW3NDTXF1.txt  R24G7JP0RCQ4HN.txt  R37QGRLNSZ4URH.txt  RP5O1O9Q5MA7G.txt
+R1I3ARZ48N11AF.txt  R24N5RYEECP3Z2.txt  R3AI10T5TJFH8X.txt  RSFDBFM646ETS.txt
+R1IMPR1OURMX0J.txt  R27TR8B9R48TCJ.txt  R3DVZIVYQ14SHF.txt  RSMDXC4JO6U8J.txt
+R1L0WCS2OHEUV4.txt  R2BL0A1KN1DN3W.txt  R3FLXN29T1WU1E.txt  RTDP0LELKESZJ.txt
+R1MBNO9UJBRDCM.txt  R2DLN5W8FLJZMD.txt  R3JRPAL6ALK70Q.txt  RUTQXWMXVX9GX.txt
+R1MJ6DCVH1PA5T.txt  R2FMEHVIF9Y47H.txt  R3LC6QYBELI96G.txt  RVF5KO0UCQ3FK.txt
+R1MY5BHIS3SFXX.txt  R2IWOI342Q4MYU.txt  R3QP8VTFWA343T.txt  RWVBCDA9HHJ1T.txt
+R1NZZVOB7LQ2KG.txt  R2LIA5T60ODY20.txt  R3UA9C01HFUV9T.txt  RXBFWMPMP65XU.txt
+R1OMGK8TCNN0DO.txt  R2NIKP5W8R00PH.txt  R3UX0X53CMWH.txt    RXFNEE3RCL0DU.txt
+R1OUDEQYT9ULH.txt   R2PDWZ9JMO17X1.txt  R3V043VUZCW4QX.txt  RYAKOMK44DE58.txt
+R1OZW47JD2H98F.txt  R2RF6A68YTRDUE.txt  R4BKJTRIECPK2.txt   RYRDVTBIWVF0.txt
+R1RRV02NZJTLM1.txt  R2SO7GWIH233FS.txt  R66Y1AAU8JATX.txt   RYRTISCRC7DRV.txt
+
+bui@f6linuxA7:~/REVIEWS_UNHELPFUL$ cat R121VUBD3RIDXO.txt
+If I ever see this book again it'll be to soon.I hate book with a passion , i only finished reading it because i can't start reading a book and not finish it .In the middle of the book they killed off a favorite character !They didnt do it gradually they just kilt the person and they didnt make the people feel sorry enough that he died.They were like oh well he's gone. Also they didnt make you like the main character  enough , if she would have died you would'nt have cared.The ending made it seem like the author wrote the ending on an airplane just to past time
+
+bui@f6linuxA7:~/REVIEWS_UNHELPFUL$ for i in `ls *.txt`; do ../lemmatization.sh $i ; done
+
+bui@f6linuxA7:~/REVIEWS_UNHELPFUL$ cat R121VUBD3RIDXO.txt
+If I ever see thi book again it'll be to soon.I hate book with a passion , i only finishe read it because i can't start read a book and not finish it .In the middle of the book they kille off a favorite character !They didnt do it gradually they just kilt the person and they didnt make the people feel sorry enough that he died.They were like oh well he' gone. Also they didnt make you like the main character  enough , if she would have die you would'nt have cared.The end made it seem like the author wrote the end on an airplane just to past time
+
+bui@f6linuxA7:~/REVIEWS_UNHELPFUL$ for i in `ls *.txt`; do ../sed_replacements.sh $i ; done
+
+bui@f6linuxA7:~/REVIEWS_UNHELPFUL$ cat R121VUBD3RIDXO.txt
+If ever see thi book again it ll to soon I hate book passion   only finishe read because can t start read book finish  In middle book they kille off favorite character  They didnt gradually they kilt person they didnt make people feel sorry enough that died They were like well he  gone  Also they didnt make like main character  enough   she would die would nt cared The end made seem like author wrote end an airplane past time
+
+bui@f6linuxA7:~/REVIEWS_UNHELPFUL$ cd ..
+
+bui@f6linuxA7:~$ ls
+1000reviews.txt                    datamash-1.3.tar.gz
+100badreviews.txt                  lemmatization.sh
+REVIEWS                            second.txt
+REVIEWS_UNHELPFUL                  sed_replacements.sh
+TWEETS                             share
+a4.txt                             similar_tweets.txt
+amazon_reviews_us_Books_v1_02.tsv  testdata.manual.2009.06.14.csv
+append_tweets.sh                   top100reviews.txt
+assignment.txt                     top100tweets.column6.txt
+assignments                        top100tweets.txt
+bin                                training.1600000.processed.noemoticon.csv
+commands.txt                       trainingandtestdata.zip
+datamash-1.3                       worksheets
+
+bui@f6linuxA7:~$ rm similar_tweets.txt
+
+bui@f6linuxA7:~$ rm commands.txt
+
+bui@f6linuxA7:~$ ls
+1000reviews.txt                    datamash-1.3.tar.gz
+100badreviews.txt                  lemmatization.sh
+REVIEWS                            second.txt
+REVIEWS_UNHELPFUL                  sed_replacements.sh
+TWEETS                             share
+a4.txt                             testdata.manual.2009.06.14.csv
+amazon_reviews_us_Books_v1_02.tsv  top100reviews.txt
+append_tweets.sh                   top100tweets.column6.txt
+assignment.txt                     top100tweets.txt
+assignments                        training.1600000.processed.noemoticon.csv
+bin                                trainingandtestdata.zip
+datamash-1.3                       worksheets
+
+bui@f6linuxA7:~$ for i in `ls REVIEWS_UNHELPFUL/*.txt`; do for j in `ls TWEETS/*.txt`; do echo "./append_tweets.sh $i $j" >> commands.txt ; done; done
+
+bui@f6linuxA7:~$ wc -l commands.txt 
+10000 commands.txt
+
+bui@f6linuxA7:~$ head commands.txt 
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet1.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet10.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet100.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet11.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet12.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet13.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet14.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet15.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet16.txt
+./append_tweets.sh REVIEWS_UNHELPFUL/R121VUBD3RIDXO.txt TWEETS/tweet17.txt
+
+bui@f6linuxA7:~$ time parallel < commands.txt
+
+real	0m31.327s
+user	1m35.857s
+sys	1m2.241s
+
+bui@f6linuxA7:~$ ./lemmatization.sh similar_tweets.txt
+
+bui@f6linuxA7:~$ ./sed_replacements.sh similar_tweets.txt
+
+bui@f6linuxA7:~$ tr " " "\n" < similar_tweets.txt | sort | uniq -c | sort -nr -k 1 | head -n 15
+  34744 
+   1506 that
+    790 too
+    776 now
+    696 don
+    695 day
+    694 like
+    691 see
+    687 sad
+    667 one
+    655 out
+    600 tomorrow
+    595 think
+    580 really
+    567 time
+
+EXPLANATION: I got the first 100 reviews from the amazon file where the helpfulness column value was 0. Then, I ran
+each file with the lemmatization and sed_replacements shell scripts. Then, after removing the commands.txt file and
+similar_tweets.txt that is used for #6, I made the commands.txt file again but for comparing tweets against the files
+in REVIEW_UNHELPFUL. I show that commands.txt has 10000 commands again and that I'm indeed comparing files from
+REVIEW_UNHELPFUL against the tweets. Running the time parallel command again showed me that running the commands in
+parallel took about 31 seconds. Then before performing #6 for this group of reviews, I ran the lemmatization and
+sed_replacements scripts on the similar_tweets.txt again and then found the top 10-15 words, which was pretty similar
+in words and counts for what was found earlier.
+
+======================================================================================================================
+bui@f6linuxA7:~$ exit
+
+Script done on 2021-11-19 08:50:07+00:00 [COMMAND_EXIT_CODE="0"]
